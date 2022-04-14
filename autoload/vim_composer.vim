@@ -89,11 +89,26 @@ function! vim_composer#ComposerUpdateFunc(arg) abort
 endfunction
 
 function! vim_composer#ComposerRequireFunc(arg) abort
-    call s:ComposerRunFunc("require " . a:arg)
+    if ( ! s:existsPackage(".", a:arg))
+        call s:ComposerRunFunc("require " . a:arg)
+    endif
 endfunction
 
 function! vim_composer#ComposerGlobalRequireFunc(arg) abort
-    call s:ComposerRunFunc("global require " . a:arg)
+    let s:global_composer_path = getenv('COMPOSER_HOME')
+    if ( s:global_composer_path is v:null)
+        let s:home = getenv('HOME')
+        let s:global_composer_path = s:home."/.config/composer"
+    endif
+    if ( ! s:existsPackage(s:global_composer_path, a:arg))
+        call s:ComposerRunFunc("global require " . a:arg)
+    endif
+endfunction
+
+function! s:existsPackage(arg1, arg2)
+    let s:composer_dir = a:arg1
+    let s:package_dir = s:composer_dir . '/vendor/' . a:arg2
+    return isdirectory(s:package_dir)
 endfunction
 
 function! vim_composer#ComposerDumpAutoloadFunc() abort
