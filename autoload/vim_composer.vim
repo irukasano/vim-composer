@@ -107,7 +107,7 @@ endfunction
 
 function! s:existsPackage(arg1, arg2)
     let s:composer_dir = a:arg1
-    let s:package_dir = s:composer_dir . '/vendor/' . a:arg2
+    let s:package_dir = s:composer_dir . '/vendor/' . tolower(a:arg2)
     return isdirectory(s:package_dir)
 endfunction
 
